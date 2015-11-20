@@ -1,0 +1,81 @@
+CREATE TABLE keg
+(
+kid int not null primary key,
+fill_date timestamp,
+distribute_date timestamp,
+return_date timestamp
+);
+
+CREATE TABLE batch_in_keg
+(
+batchID int not null references batch(bid),
+kegID int not null references keg(kid)
+);
+
+CREATE TABLE batch
+(
+bid int not null primary key,
+brewday timestamp not null,
+fermentation_id int not null references fermentation(fid),
+packaging varchar(150),
+shipment varchar(150)
+);
+
+CREATE TABLE beer
+(
+beerID int not null primary key,
+recipe mediumblob
+);
+
+CREATE TABLE beer_is_beer_type
+(
+beer int references beer(beerID),
+beer_type int references beer_type(typeID)
+);
+
+CREATE TABLE beer_type
+(
+typeID int not null,
+name varchar(150) not null
+);
+
+CREATE TABLE beer_contains_ingredient
+(
+beerID int not null references beer(id),
+ingID int not null references ingredient(IngID)
+);
+
+CREATE TABLE ingredient
+(
+IngID int not null,
+name varchar(50)not null,
+supplier varchar(150),
+brand varchar(150),
+amount float not null,
+unit varchar(50) not null references unit(name),
+price_per_unit float,
+ingredient_type varchar(50), 
+best_by date,
+lot_num double
+);
+
+CREATE TABLE fermentation
+(
+FID int not null primary key,
+value float not null,
+unit_name varchar(50) not null references unit(name),
+fermentation_type varchar(50) not null references fermentation_type(name),
+brew_id int not null references batch(batchID),
+timedate timestamp
+);
+
+CREATE TABLE fermentation_type
+(
+ftypeID int not null AUTO_INCREMENT primary key,
+name varchar(50) not null
+);
+
+CREATE TABLE unit
+(
+name varchar(50) not null primary key
+);
